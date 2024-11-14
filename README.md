@@ -1,2 +1,2 @@
-# serve-provider-need
-Platform for providers to offer a catalogue of needs, enabling seekers to fulfill them efficiently.
+# serve-provider
+Platform for providers to offer a catalogue of needs and volunteers, enabling seekers to fulfill them efficiently.
