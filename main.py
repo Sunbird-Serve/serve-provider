@@ -5,6 +5,9 @@ import pika
 import json
 import traceback
 from typing import Optional
+from fastapi.responses import JSONResponse
+import requests
+
 
 app = FastAPI()
 
@@ -77,3 +80,33 @@ async def submit_volunteer(volunteer: Volunteer):
 @app.get("/")
 async def read_root():
     return {"message": "Provider application is running"}
+
+
+
+@app.post("/trigger-serve-nominated")
+def trigger_serve_nominated():
+    try:
+        # Fetch data from Serve API
+        response = requests.get("https://serve-v1.evean.net/api/v1/serve-need/need/?page=0&status=Nominated")
+        response.raise_for_status()
+        serve_data = response.json().get("content", [])
+
+        # Connect to RabbitMQ and publish data
+        connection = pika.BlockingConnection(pika.ConnectionParameters("localhost"))
+        channel = connection.channel()
+        channel.queue_declare(queue="serve_data_queue", durable=True)
+
+        for item in serve_data:
+            channel.basic_publish(
+                exchange="",
+                routing_key="serve_data_queue",
+                body=json.dumps(item),
+                properties=pika.BasicProperties(delivery_mode=2),
+            )
+        connection.close()
+
+        return {"message": "Data fetched and sent to RabbitMQ"}
+    except Exception as e:
+        return {"error": str(e)}
+    
+
