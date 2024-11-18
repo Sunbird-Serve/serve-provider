@@ -8,6 +8,7 @@ from typing import Optional
 from fastapi.responses import JSONResponse
 import requests
 
+
 app = FastAPI()
 
 # Configure CORS
@@ -81,6 +82,7 @@ async def read_root():
     return {"message": "Provider application is running"}
 
 
+
 @app.post("/trigger-serve-nominated")
 def trigger_serve_nominated():
     try:
@@ -107,3 +109,4 @@ def trigger_serve_nominated():
     except Exception as e:
         return {"error": str(e)}
     
+
