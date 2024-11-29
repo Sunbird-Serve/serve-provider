@@ -87,7 +87,7 @@ async def read_root():
 def trigger_serve_nominated():
     try:
         # Fetch data from Serve API
-        response = requests.get("https://serve-v1.evean.net/api/v1/serve-need/need/?page=0&status=Nominated")
+        response = requests.get("https://apswreis.evidyaloka.org/api/v1/serve-need/need/?page=0&status=Approved&status=Nominated")
         response.raise_for_status()
         serve_data = response.json().get("content", [])
 
